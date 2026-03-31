@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RADAR DISPLAY SYSTEM</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">RADAR<span>SYS</span> // DISPLAY UNIT</div>
+  <div class="status-bar">
+    <div class="status-item">
+      <div class="dot" id="wsDot"></div>
+      <span id="wsLabel">OFFLINE</span>
+    </div>
+    <div class="status-item">
+      <div class="dot active"></div>
+      <span id="clock">--:--:--</span>
+    </div>
+    <div class="status-item">
+      <div class="dot active"></div>
+      <span>PORT 4000</span>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="radar-screen">
+    <div id="chart"></div>
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-section">
+      <div class="panel-label">// Connection</div>
+      <div class="conn-status">
+        <div class="dot" id="panelDot"></div>
+        <span id="connText">Disconnected</span>
+      </div>
+      <div class="conn-url">ws://localhost:4000</div>
+      <button class="btn" id="connectBtn" onclick="toggleConnection()">CONNECT</button>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">// Live Stats</div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-val" id="statTargets">0</div>
+          <div class="stat-name">TARGETS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statAngle">---</div>
+          <div class="stat-name">ANGLE °</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statPackets">0</div>
+          <div class="stat-name">PACKETS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statMaxDist">---</div>
+          <div class="stat-name">MAX KM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">// Last Detections</div>
+      <div class="targets-list" id="targetsList">
+        <div style="color:var(--green-dim);font-size:10px">No data yet...</div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">// Radar Config</div>
+
+      <div class="field">
+        <label>MEASUREMENTS / ROTATION</label>
+        <div class="field-row">
+          <input type="range" id="mpr" min="10" max="720" value="360" step="10"
+            oninput="document.getElementById('mprVal').textContent=this.value">
+          <span class="field-val" id="mprVal">360</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>ROTATION SPEED (RPM)</label>
+        <div class="field-row">
+          <input type="range" id="rs" min="1" max="120" value="60" step="1"
+            oninput="document.getElementById('rsVal').textContent=this.value">
+          <span class="field-val" id="rsVal">60</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>TARGET SPEED (KM/H)</label>
+        <div class="field-row">
+          <input type="range" id="ts" min="0" max="1000" value="100" step="10"
+            oninput="document.getElementById('tsVal').textContent=this.value">
+          <span class="field-val" id="tsVal">100</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="applyConfig()">APPLY CONFIG</button>
+      <div class="feedback" id="configFeedback"></div>
+    </div>
+
+    <div class="panel-section">
+      <button class="btn danger" onclick="clearDisplay()">CLEAR DISPLAY</button>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">// Signal Power</div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ff3355;box-shadow:0 0 6px #ff3355"></div>
+          <span>HIGH  &gt; 0.7</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ffaa00;box-shadow:0 0 6px #ffaa00"></div>
+          <span>MED   0.3 – 0.7</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#00ff88;box-shadow:0 0 6px #00ff88"></div>
+          <span>LOW   &lt; 0.3</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/chart.js"></script>
+<script src="js/api.js"></script>
+<script src="js/websocket.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
